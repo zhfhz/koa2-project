@@ -1,0 +1,6 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+      "experimentalDecorators": true //启用实验性的ES装饰器。
+    }
+}
