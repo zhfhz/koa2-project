@@ -1,12 +1,13 @@
-const {controller, action} = require('../common/Loader/Controller')
-const Controller = require('./Controller');
+import Router from '../middle-ware/router';
+import Controller from './Controller';
+import router,{controller,action} from '../middle-ware/router';
 
-@controller('')
-class UserController extends Controller {
+@controller()
+class DefaultController extends Controller {
     @action('/','GET')
     async default(ctx, next){
         ctx.body=new Date()
     }
 }
 
-module.exports = UserController;
+export default DefaultController;

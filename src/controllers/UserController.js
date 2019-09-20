@@ -1,10 +1,15 @@
-const {controller, action} = require('../common/Loader/Controller')
-const Controller = require('./Controller');
-const UserModel = require('../models/User');
-const jwt = require('../middle-ware/jwt');
+import UserModel from '../models/User';
+import router,{controller,action} from '../middle-ware/router';
+import Controller from './Controller';
+import jwt from'../middle-ware/jwt';
 
 @controller('/user')
 class UserController extends Controller {
+    name = 'x'
+    constructor(){
+        super()
+        console.log('UserController inited',this.name);
+    }
     @action('/register','post')
     async register(ctx, next, data){
         // 注册

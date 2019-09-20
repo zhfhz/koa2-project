@@ -1,6 +1,6 @@
-require('./DefaultController');
-require('./UserController');
-const {router} = require('../common/Loader/Controller');
+import './DefaultController';
+import './UserController';
+import router from '../middle-ware/router';
 
 module.exports = {
     load:function(app){

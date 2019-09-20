@@ -1,4 +1,11 @@
 {
     "plugins": ["transform-decorators-legacy","babel-plugin-transform-runtime"],
-    "presets": ["env"]
+    "presets": [
+        ["env", {
+            "target":{
+                "node": "current"
+            }
+        }],
+        "stage-0"
+    ]
 }

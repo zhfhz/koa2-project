@@ -1,6 +1,6 @@
-const MysqlModel = require('./MysqlModel');
-const { MysqlDatabase, DEF_MYSQL } = require('../database');
-const { Utils, Logger } = require('../common');
+import MysqlModel from './MysqlModel';
+import { MysqlDatabase, DEF_MYSQL } from '../database';
+import { Utils, Logger } from '../common';
 
 let db = DEF_MYSQL;
 let tableName = 't_user';
@@ -72,4 +72,4 @@ class User extends MysqlModel {
     return User.DATASTORE;
   }
 }
-module.exports = User;
+export default User;

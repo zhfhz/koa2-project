@@ -1,4 +1,4 @@
-const {controller, action} = require('../common/Loader/Controller')
+const {controller, action} = require('../middle-ware/router')
 const Controller = require('./Controller');
 
 @controller('/role')
