@@ -29,9 +29,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "nodemon --exec babel src  --out-dir bin",
+    "build": "nodemon --exec babel src  --out-dir bin && copy .\\src\\database\\database.sql .\\bin\\database\\database.sql",
     "start": "node ./bin/app.js",
-    "dev": "nodemon --exec \"babel src --out-dir bin && node --inspect ./bin/app.js\""
+    "dev": "nodemon --exec \"babel src --out-dir bin && copy .\\src\\database\\database.sql .\\bin\\database\\database.sql && node --inspect ./bin/app.js\""
   },
   "author": "zf",
   "license": "ISC"

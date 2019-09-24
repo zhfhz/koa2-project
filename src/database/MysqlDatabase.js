@@ -164,7 +164,6 @@ class MysqlDatabase extends Database {
   static get SQLQuery() { 
     return SQLQuery;
   }
-
   //TODO:
   //strict mode - operate exactly with data provided, let mysql throw on schema errors. Also throw instead of just printing an error message in each method when result count is unexpected
   //relaxed mode - simply ignore (filter out) all fields that the table doesn't have and operate with reduced valid dataset(requires 1 extra query to fetch columns)
@@ -253,7 +252,13 @@ class MysqlDatabase extends Database {
     const configStr = JSON.stringify(this.config);
     if (!CONNECTIONS[configStr]) {
       console.log('创建数据库访问连接池...')
-      let pool = mysql.createPool(this.config);
+      let pool = null;
+      try {
+        pool = mysql.createPool(this.config);  
+      } catch (error) {
+        console.log('找不到数据库')
+      }
+      
       CONNECTIONS[configStr] = pool;
     }
 
