@@ -1,6 +1,9 @@
-const Database = require('./Database');
-const mysql = require('mysql2');
-const { Utils, Logger } = require('../common');
+import Database from './Database';
+import mysql from 'mysql2';
+import { Utils, Logger } from '../common';
+import DbCache from './DbCache';
+
+const dbCache = new DbCache()
 
 let CONNECTIONS = {};
 const queryOptions = {
@@ -170,15 +173,28 @@ class MysqlDatabase extends Database {
   async execute(...queries) {
     if(!queries.every(q=>q instanceof SQLQuery)) throw new Error('All queries must be instances of SQLQuery object');
     const autoRelease = !this.connection;
-    const connection = await this.connect();   
     const executing = [];
-    for(let query of queries){
+    const connection = await this.connect();   
+    queries.forEach(async (query, index) => {
       //Logger.verbose(`Executing\n${query.toString()}\nwith ${query.params.length} parameters`);
-      executing.push(connection.query(...query.prepare()));
-    }
+      let cacheData = dbCache.getCache(JSON.stringify(query.prepare()));
+      if(cacheData){
+        executing[index] = new Promise((resolve) =>resolve(cacheData))
+      }else{
+        
+        executing[index] = connection.query(...query.prepare());
+      }
+    })
+
     try {
       let result = await Promise.all(executing);
       if (autoRelease) connection.release();
+      queries.forEach((query, index) => {
+        //Logger.verbose(`Executing\n${query.toString()}\nwith ${query.params.length} parameters`);
+        if (!dbCache.getCache(JSON.stringify(query.prepare()))) {
+          dbCache.setCache(JSON.stringify(query.prepare()), result[index]);
+        }
+      })
       return queries.length === 1 ? result[0] : result;
     }catch(err){
       console.log(err)
