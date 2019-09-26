@@ -8,7 +8,7 @@ const errorHandle = require('./middle-ware/error');
 app.use(errorHandle);
 
 // 全局权限校验
-app.use(jwt);
+// app.use(jwt);
 
 controllers.load(app);
 

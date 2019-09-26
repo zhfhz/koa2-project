@@ -205,6 +205,10 @@ class Utils {
     }
     return result;
   }
+  static JSONAssert(jsonObj1, jsonObj2){
+    if(jsonObj1 === jsonObj2) return  true;
+    return JSON.stringify(jsonObj1) === JSON.stringify(jsonObj2);
+  }
 }
 
 module.exports = Utils;

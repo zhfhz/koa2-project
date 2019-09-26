@@ -18,7 +18,10 @@ module.exports = class Model {
     //TODO: return proxy instead like in Association, to validate values on assignment    
     //return new Proxy(this, validator); //where validator is Child.VALIDATOR implementing Proxy.handler passed via constructor parameter
   }
-
+  /**
+   * 使用缓存
+   */
+  useCache = false;
   /**
    * Returns a symbol indicating that models have been loaded. Must be set to global object once that happens.
    */

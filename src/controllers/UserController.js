@@ -1,4 +1,5 @@
 import UserModel from '../models/User';
+import ListModel from '../models/MysqlListModel';
 import router,{controller,action} from '../middle-ware/router';
 import Controller from './Controller';
 import jwt from'../middle-ware/jwt';
@@ -41,6 +42,16 @@ class UserController extends Controller {
     @action('/role','get')
     async getRole(ctx, next){
         // 获取用户角色
+    }
+    @action('/list','get')
+    async getList(ctx, next, data){
+        // 获取用户列表
+        const userList = new ListModel(UserModel,data)
+        await userList.get();
+        ctx.body = {
+            code:200,
+            data:userList.serialize()
+        }
     }
     @action('/access','get')
     async getAccess(ctx, next){

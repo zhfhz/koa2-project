@@ -1,13 +1,15 @@
-const Model = require('./Model');
-const { MysqlDatabase } = require('../database');
-const { Utils, Logger } = require('../common');
+import Model from './Model';
+import { MysqlDatabase } from '../database';
+import { Logger, Utils } from '../common';
+import ModelCache from './ModelCache';
+
+const modelCache = new ModelCache();
 
 module.exports = 
 class MysqlModel extends Model {
   constructor(data){
     super(data);    
   }
-
   static parseWhere(where, params){
     if(!where) return [];
     if(Array.isArray(where) && where.every(item=>Number.isInteger(item))) return [ 'id IN (?)', where ];
@@ -97,6 +99,12 @@ class MysqlModel extends Model {
 
   async get(){
     let result;
+
+    const cacheData = modelCache.getCache(JSON.stringify(this.serialize()));
+    if (cacheData) {
+      return cacheData;
+    }
+
     //TODO: implementation of this method might vary quite severely. 
     //This is just an example of how it *could* be done - either by id or by combination of all available attributes
     if(!this.id){
@@ -112,8 +120,10 @@ class MysqlModel extends Model {
     if(data.length === 0) {
       Logger.error(`Did not find record ${this} in the database.`);      
     } else {
+      this.useCache && modelCache.setCache(JSON.stringify(this.serialize()),data[0]);
       this.deserialize(data[0]);
     }
+    
     return this;
   }
 }

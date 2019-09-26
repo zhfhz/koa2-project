@@ -10,7 +10,6 @@ class User extends MysqlModel {
     super(data);
     this.deserialize(data);
   }
-
   deserialize(data){
     if(data.id && !isNaN(data.id)) this.id = data.id;
     for(let [key, value] of Utils.iterateObject(data)){
@@ -34,12 +33,11 @@ class User extends MysqlModel {
   }
 
   serialize(id){
-    const json = {
-      dd_id: this.ddId,
-      name: this.name,
-      email: this.email,
-      avatar: this.avatar
-    }
+    const json = {}
+    this.ddId && (json.dd_id = this.ddId);
+    this.name && (json.name = this.name);
+    this.email && (json.email = this.email);
+    this.avatar && (json.avatar = this.avatar);
     if(id) json.id = this.id;
     return json;
   }

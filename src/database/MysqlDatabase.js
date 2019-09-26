@@ -1,9 +1,6 @@
 import Database from './Database';
 import mysql from 'mysql2';
 import { Utils, Logger } from '../common';
-import DbCache from './DbCache';
-
-const dbCache = new DbCache()
 
 let CONNECTIONS = {};
 const queryOptions = {
@@ -175,26 +172,14 @@ class MysqlDatabase extends Database {
     const autoRelease = !this.connection;
     const executing = [];
     const connection = await this.connect();   
-    queries.forEach(async (query, index) => {
+    queries.forEach((query, index) => {
       //Logger.verbose(`Executing\n${query.toString()}\nwith ${query.params.length} parameters`);
-      let cacheData = dbCache.getCache(JSON.stringify(query.prepare()));
-      if(cacheData){
-        executing[index] = new Promise((resolve) =>resolve(cacheData))
-      }else{
-        
-        executing[index] = connection.query(...query.prepare());
-      }
+      executing[index] = connection.query(...query.prepare());
     })
 
     try {
       let result = await Promise.all(executing);
       if (autoRelease) connection.release();
-      queries.forEach((query, index) => {
-        //Logger.verbose(`Executing\n${query.toString()}\nwith ${query.params.length} parameters`);
-        if (!dbCache.getCache(JSON.stringify(query.prepare()))) {
-          dbCache.setCache(JSON.stringify(query.prepare()), result[index]);
-        }
-      })
       return queries.length === 1 ? result[0] : result;
     }catch(err){
       console.log(err)
